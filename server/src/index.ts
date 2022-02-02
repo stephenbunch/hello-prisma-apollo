@@ -1,23 +1,26 @@
-import { ApolloServer, gql, Config } from "apollo-server-fastify";
-import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import { ApolloServer } from "apollo-server-fastify";
+import { ApolloServerPluginDrainHttpServer, Config } from "apollo-server-core";
 import { ApolloServerPlugin } from "apollo-server-plugin-base";
 import fastify, { FastifyInstance } from "fastify";
 import fastifyStatic from "fastify-static";
-import path from "path";
+import * as path from "path";
+import { resolvers, typeDefs } from "./graphql/schema";
+import { prisma } from "./prisma/client";
 
-function fastifyAppClosePlugin(app: FastifyInstance): ApolloServerPlugin {
+function appClosePlugin(app: FastifyInstance): ApolloServerPlugin {
   return {
     async serverWillStart() {
       return {
         async drainServer() {
           await app.close();
+          await prisma.$disconnect();
         },
       };
     },
   };
 }
 
-async function startApolloServer(
+async function startServer(
   typeDefs: Config["typeDefs"],
   resolvers: Config["resolvers"]
 ) {
@@ -27,7 +30,7 @@ async function startApolloServer(
     typeDefs,
     resolvers,
     plugins: [
-      fastifyAppClosePlugin(app),
+      appClosePlugin(app),
       ApolloServerPluginDrainHttpServer({ httpServer: app.server }),
     ],
   });
@@ -43,33 +46,4 @@ async function startApolloServer(
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }
 
-const typeDefs = gql`
-  type Todo {
-    id: ID!
-    description: String!
-  }
-
-  type Query {
-    todos: [Todo!]!
-  }
-`;
-
-interface Todo {
-  id: string;
-  description: string;
-}
-
-const todos: Todo[] = [
-  {
-    id: "1",
-    description: "Make breakfast",
-  },
-];
-
-const resolvers = {
-  Query: {
-    todos: () => todos,
-  },
-};
-
-startApolloServer(typeDefs, resolvers);
+startServer(typeDefs, resolvers);
