@@ -1,11 +1,15 @@
 import { ApolloServer } from "apollo-server-fastify";
-import { ApolloServerPluginDrainHttpServer, Config } from "apollo-server-core";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { ApolloServerPlugin } from "apollo-server-plugin-base";
 import fastify, { FastifyInstance } from "fastify";
 import fastifyStatic from "fastify-static";
 import * as path from "path";
-import { resolvers, typeDefs } from "./graphql/schema";
+import { resolvers } from "./graphql/resolvers";
 import { prisma } from "./prisma/client";
+import { loadSchema } from "@graphql-tools/load";
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+import { addResolversToSchema } from "@graphql-tools/schema";
+import * as dotenv from "dotenv";
 
 function appClosePlugin(app: FastifyInstance): ApolloServerPlugin {
   return {
@@ -20,15 +24,19 @@ function appClosePlugin(app: FastifyInstance): ApolloServerPlugin {
   };
 }
 
-async function startServer(
-  typeDefs: Config["typeDefs"],
-  resolvers: Config["resolvers"]
-) {
-  const app = fastify();
+async function main() {
+  dotenv.config();
 
+  const app = fastify();
+  const schema = await loadSchema(
+    path.resolve(path.join(__dirname, "graphql", "schema.gql")),
+    {
+      loaders: [new GraphQLFileLoader()],
+    }
+  );
+  const schemaWithResolvers = addResolversToSchema({ schema, resolvers });
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema: schemaWithResolvers,
     plugins: [
       appClosePlugin(app),
       ApolloServerPluginDrainHttpServer({ httpServer: app.server }),
@@ -42,8 +50,10 @@ async function startServer(
     root: path.resolve(path.join(__dirname, "../web/build")),
   });
 
-  await app.listen(4000);
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  await app.listen(process.env.PORT);
+  console.log(
+    `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
+  );
 }
 
-startServer(typeDefs, resolvers);
+main();

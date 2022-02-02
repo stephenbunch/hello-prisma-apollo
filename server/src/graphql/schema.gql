@@ -1,0 +1,31 @@
+scalar Void
+
+type Todo {
+  id: String!
+  description: String!
+}
+
+input TodoCreateInput {
+  description: String!
+}
+
+input TodoUpdateInput {
+  id: String!
+  description: String
+}
+
+type Query {
+  todo(id: String!): Todo
+  todos: [Todo!]!
+}
+
+type Mutation {
+  createTodo(input: TodoCreateInput!): Todo!
+  updateTodo(input: TodoUpdateInput!): Todo!
+  deleteTodo(id: String!): Void
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

@@ -1,5 +1,5 @@
-import { gql } from "apollo-server-core";
 import { GraphQLScalarType } from "graphql";
+import { Resolvers } from "./types";
 
 const Void = new GraphQLScalarType({
   name: "Void",
@@ -15,10 +15,6 @@ const Void = new GraphQLScalarType({
   },
 });
 
-export const scalarTypeDefs = gql`
-  scalar Void
-`;
-
-export const scalarResolvers = {
+export const scalarResolvers: Resolvers = {
   Void,
 };

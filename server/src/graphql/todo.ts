@@ -1,45 +1,9 @@
-import { gql } from "apollo-server-core";
 import { prisma } from "../prisma/client";
+import { Resolvers } from "./types";
 
-export const todoTypeDefs = gql`
-  type Todo {
-    id: String!
-    description: String!
-  }
-
-  input TodoCreateInput {
-    description: String!
-  }
-
-  input TodoUpdateInput {
-    id: String!
-    description: String
-  }
-
-  type Query {
-    todo(id: String!): Todo
-    todos: [Todo!]!
-  }
-
-  type Mutation {
-    createTodo(input: TodoCreateInput!): Todo!
-    updateTodo(input: TodoUpdateInput!): Todo!
-    deleteTodo(id: String!): Void
-  }
-`;
-
-interface TodoCreateInput {
-  description: string;
-}
-
-interface TodoUpdateInput {
-  id: string;
-  description?: string;
-}
-
-export const todoResolvers = {
+export const todoResolvers: Resolvers = {
   Query: {
-    async todo(_, { id }: { id: string }) {
+    async todo(_, { id }) {
       const todos = await prisma.todo.findMany({
         where: { id },
         take: 1,
@@ -54,18 +18,18 @@ export const todoResolvers = {
   },
 
   Mutation: {
-    async createTodo(_, { input }: { input: TodoCreateInput }) {
+    async createTodo(_, { input }) {
       const todo = await prisma.todo.create({ data: input });
       return todo;
     },
 
-    async updateTodo(_, { input }: { input: TodoUpdateInput }) {
+    async updateTodo(_, { input }) {
       const { id, ...data } = input;
       const todo = await prisma.todo.update({ where: { id }, data });
       return todo;
     },
 
-    async deleteTodo(_, { id }: { id: string }) {
+    async deleteTodo(_, { id }) {
       await prisma.todo.delete({ where: { id } });
     },
   },
