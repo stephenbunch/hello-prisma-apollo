@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.4.0",
+    "@graphql-codegen/typescript": "^2.4.2",
+    "@graphql-codegen/typescript-resolvers": "^2.4.3",
     "@types/node": "^17.0.13",
     "concurrently": "^7.0.0",
     "prettier": "2.5.1",
@@ -36,5 +39,8 @@
   },
   "prisma": {
     "schema": "./src/prisma/schema.prisma"
+  },
+  "engines": {
+    "node": "17.3.1"
   }
 }
