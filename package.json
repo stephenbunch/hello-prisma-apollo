@@ -5,8 +5,7 @@
     "web"
   ],
   "scripts": {
-    "start": "npm start -w server",
-    "build": "npm build -w web"
+    "build": "npm run build -w web"
   },
   "engines": {
     "node": "17.3.1"

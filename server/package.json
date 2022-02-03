@@ -7,7 +7,8 @@
     "dev": "concurrently \"ts-node-dev .\" \"npm run codegen -- --watch\"",
     "start": "ts-node .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "migrate": "prisma migrate deploy"
   },
   "author": "",
   "license": "ISC",
