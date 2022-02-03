@@ -9,3 +9,7 @@ mutation UpdateTodo($input: TodoUpdateInput!) {
     completed
   }
 }
+
+mutation UpdateTodos($input: TodoUpdateManyInput!) {
+  updateTodos(input: $input)
+}

@@ -32,6 +32,11 @@ export const todoResolvers: Resolvers = {
       return todo;
     },
 
+    async updateTodos(_, { input }) {
+      const batch = await prisma.todo.updateMany({ data: input });
+      return batch.count;
+    },
+
     async deleteTodo(_, { id }) {
       await prisma.todo.delete({ where: { id } });
     },

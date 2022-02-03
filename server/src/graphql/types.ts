@@ -21,6 +21,7 @@ export type Mutation = {
   deleteTodo?: Maybe<Scalars['Void']>;
   deleteTodos?: Maybe<Scalars['Void']>;
   updateTodo: Todo;
+  updateTodos: Scalars['Int'];
 };
 
 
@@ -41,6 +42,11 @@ export type MutationDeleteTodosArgs = {
 
 export type MutationUpdateTodoArgs = {
   input: TodoUpdateInput;
+};
+
+
+export type MutationUpdateTodosArgs = {
+  input: TodoUpdateManyInput;
 };
 
 export type Query = {
@@ -70,6 +76,10 @@ export type TodoUpdateInput = {
   completed?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
+};
+
+export type TodoUpdateManyInput = {
+  completed?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -142,24 +152,28 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Todo: ResolverTypeWrapper<Todo>;
   TodoCreateInput: TodoCreateInput;
   TodoUpdateInput: TodoUpdateInput;
+  TodoUpdateManyInput: TodoUpdateManyInput;
   Void: ResolverTypeWrapper<Scalars['Void']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Int: Scalars['Int'];
   Mutation: {};
   Query: {};
   String: Scalars['String'];
   Todo: Todo;
   TodoCreateInput: TodoCreateInput;
   TodoUpdateInput: TodoUpdateInput;
+  TodoUpdateManyInput: TodoUpdateManyInput;
   Void: Scalars['Void'];
 };
 
@@ -168,6 +182,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTodo?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
   deleteTodos?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType, RequireFields<MutationDeleteTodosArgs, never>>;
   updateTodo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'input'>>;
+  updateTodos?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationUpdateTodosArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

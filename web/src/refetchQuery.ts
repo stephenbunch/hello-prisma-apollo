@@ -13,12 +13,12 @@ const queryByName = {
 };
 
 const listener: Pubnub.ListenerParameters = {
-  message(e) {
+  async message(e) {
     if (e.channel === Channel.refetchQueries) {
       const queries = (e.message as string[])
         .map((queryName) => queryByName[queryName])
         .filter((query) => !!query);
-      refetchQueries(queries);
+      await apolloClient.refetchQueries({ include: queries });
     }
   },
 };
@@ -40,7 +40,6 @@ export async function refetchQueries(queries: DocumentNode[]) {
     }
     return name;
   });
-
   await apolloClient.refetchQueries({ include: queries });
   pubnub.publish({ channel: Channel.refetchQueries, message: names });
 }

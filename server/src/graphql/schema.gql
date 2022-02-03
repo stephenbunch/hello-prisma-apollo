@@ -17,6 +17,10 @@ input TodoUpdateInput {
   completed: Boolean
 }
 
+input TodoUpdateManyInput {
+  completed: Boolean
+}
+
 type Query {
   todo(id: String!): Todo
   todos: [Todo!]!
@@ -25,6 +29,7 @@ type Query {
 type Mutation {
   createTodo(input: TodoCreateInput!): Todo!
   updateTodo(input: TodoUpdateInput!): Todo!
+  updateTodos(input: TodoUpdateManyInput!): Int!
   deleteTodo(id: String!): Void
   deleteTodos(completed: Boolean): Void
 }
