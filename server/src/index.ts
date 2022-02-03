@@ -50,7 +50,7 @@ async function main() {
     root: path.resolve(path.join(__dirname, "../web/build")),
   });
 
-  await app.listen(process.env.PORT || 4000);
+  await app.listen(process.env.PORT || 4000, "0.0.0.0");
   console.log(
     `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
   );
