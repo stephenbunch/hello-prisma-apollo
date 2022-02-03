@@ -3,10 +3,11 @@ import {
   GetTodosDocument,
   useUpdateTodoMutation,
   TodoApp_Item_TodoFragment,
-} from "../../../graphql/codegen";
+} from "../../../graphql-codegen";
 import classNames from "classnames";
 import { useCallback, useState, KeyboardEvent } from "react";
 import { Key } from "ts-key-enum";
+import { refetchQueries } from "../../../refetchQuery";
 
 export interface TodoItemProps {
   todo: TodoApp_Item_TodoFragment;
@@ -21,8 +22,11 @@ export function Item(props: TodoItemProps) {
   const [editing, setEditing] = useState(false);
   const [description, setDescription] = useState("");
 
-  const commitDescription = useCallback(() => {
-    updateTodoMutation({ variables: { input: { id: todo.id, description } } });
+  const commitDescription = useCallback(async () => {
+    await updateTodoMutation({
+      variables: { input: { id: todo.id, description } },
+    });
+    await refetchQueries([GetTodosDocument]);
     setEditing(false);
     setDescription("");
   }, [todo, description]);
@@ -31,6 +35,9 @@ export function Item(props: TodoItemProps) {
     (e: KeyboardEvent) => {
       if (e.key === Key.Enter) {
         commitDescription();
+      } else if (e.key === Key.Escape) {
+        setEditing(false);
+        setDescription("");
       }
     },
     [commitDescription]
@@ -41,20 +48,16 @@ export function Item(props: TodoItemProps) {
     setEditing(true);
   }, [todo]);
 
-  const markCompleted = useCallback(() => {
-    updateTodoMutation({
-      variables: {
-        input: { id: todo.id, completed: !todo.completed },
-      },
-      refetchQueries: [GetTodosDocument],
+  const markCompleted = useCallback(async () => {
+    await updateTodoMutation({
+      variables: { input: { id: todo.id, completed: !todo.completed } },
     });
+    await refetchQueries([GetTodosDocument]);
   }, [todo]);
 
-  const deleteTodo = useCallback(() => {
-    deleteTodoMutation({
-      variables: { id: todo.id },
-      refetchQueries: [GetTodosDocument],
-    });
+  const deleteTodo = useCallback(async () => {
+    await deleteTodoMutation({ variables: { id: todo.id } });
+    await refetchQueries([GetTodosDocument]);
   }, [todo]);
 
   return (
@@ -64,7 +67,7 @@ export function Item(props: TodoItemProps) {
         editing,
       })}
     >
-      <div className="view" onDoubleClick={beginEditing}>
+      <div className="view">
         <input
           className="toggle"
           type="checkbox"
@@ -72,7 +75,7 @@ export function Item(props: TodoItemProps) {
           readOnly
           onClick={markCompleted}
         />
-        <label>{todo.description}</label>
+        <label onDoubleClick={beginEditing}>{todo.description}</label>
         <button className="destroy" onClick={deleteTodo}></button>
       </div>
       {editing && (

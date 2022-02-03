@@ -1,4 +1,4 @@
-import { TodoApp_Item_TodoFragment } from "../../graphql/codegen";
+import { TodoApp_Item_TodoFragment } from "../../graphql-codegen";
 import { Item } from "./Item";
 
 export interface BodyProps {

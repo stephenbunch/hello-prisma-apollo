@@ -3,7 +3,8 @@ import { Key } from "ts-key-enum";
 import {
   GetTodosDocument,
   useCreateTodoMutation,
-} from "../../../graphql/codegen";
+} from "../../../graphql-codegen";
+import { refetchQueries } from "../../../refetchQuery";
 
 export function Input() {
   const [createTodo, _] = useCreateTodoMutation();
@@ -16,10 +17,8 @@ export function Input() {
       if (e.key === Key.Enter && value !== "") {
         setLoading(true);
         try {
-          await createTodo({
-            variables: { input: { description: value } },
-            refetchQueries: [GetTodosDocument],
-          });
+          await createTodo({ variables: { input: { description: value } } });
+          await refetchQueries([GetTodosDocument]);
           setValue("");
         } finally {
           setLoading(false);

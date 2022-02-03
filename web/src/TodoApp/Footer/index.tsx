@@ -1,7 +1,9 @@
+import { useCallback } from "react";
 import {
   GetTodosDocument,
   useDeleteCompletedTodosMutation,
-} from "../../graphql/codegen";
+} from "../../graphql-codegen";
+import { refetchQueries } from "../../refetchQuery";
 import { Filter, filters } from "../Filter";
 
 export interface FooterProps {
@@ -14,6 +16,11 @@ export function Footer(props: FooterProps) {
   const { selectedFilter, onFilterChange, activeTodoCount } = props;
 
   const [deleteCompletedTodos, _] = useDeleteCompletedTodosMutation();
+
+  const onClearCompleted = useCallback(async () => {
+    await deleteCompletedTodos();
+    await refetchQueries([GetTodosDocument]);
+  }, [deleteCompletedTodos]);
 
   return (
     <footer className="footer">
@@ -35,12 +42,7 @@ export function Footer(props: FooterProps) {
           </li>
         ))}
       </ul>
-      <button
-        className="clear-completed"
-        onClick={() =>
-          deleteCompletedTodos({ refetchQueries: [GetTodosDocument] })
-        }
-      >
+      <button className="clear-completed" onClick={onClearCompleted}>
         Clear completed
       </button>
     </footer>
