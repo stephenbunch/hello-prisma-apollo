@@ -4,7 +4,7 @@ import {
   TodoApp_Item_TodoFragment,
   useUpdateTodosMutation,
 } from "../../graphql-codegen";
-import { refetchQueries } from "../../refetchQuery";
+import { refetchQueries } from "../../refetchQueries";
 import { Item } from "./Item";
 
 export interface BodyProps {

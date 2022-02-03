@@ -3,7 +3,7 @@ import {
   GetTodosDocument,
   useDeleteCompletedTodosMutation,
 } from "../../graphql-codegen";
-import { refetchQueries } from "../../refetchQuery";
+import { refetchQueries } from "../../refetchQueries";
 import { Filter, filters } from "../Filter";
 
 export interface FooterProps {

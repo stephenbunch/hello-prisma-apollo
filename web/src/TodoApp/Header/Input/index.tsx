@@ -4,7 +4,7 @@ import {
   GetTodosDocument,
   useCreateTodoMutation,
 } from "../../../graphql-codegen";
-import { refetchQueries } from "../../../refetchQuery";
+import { refetchQueries } from "../../../refetchQueries";
 
 export function Input() {
   const [createTodo, _] = useCreateTodoMutation();

@@ -7,7 +7,7 @@ import {
 import classNames from "classnames";
 import { useCallback, useState, KeyboardEvent } from "react";
 import { Key } from "ts-key-enum";
-import { refetchQueries } from "../../../refetchQuery";
+import { refetchQueries } from "../../../refetchQueries";
 
 export interface TodoItemProps {
   todo: TodoApp_Item_TodoFragment;
