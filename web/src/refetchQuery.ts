@@ -4,9 +4,9 @@ import { apolloClient } from "./apolloClient";
 import { GetTodosDocument } from "./graphql-codegen";
 import { pubnub } from "./pubnub";
 
-enum Channel {
-  refetchQueries = "refetchQueries",
-}
+const Channel = {
+  refetchQueries: `${process.env.NODE_ENV || "development"}/refetchQueries`,
+} as const;
 
 const queryByName = {
   [getQueryName(GetTodosDocument)]: GetTodosDocument,

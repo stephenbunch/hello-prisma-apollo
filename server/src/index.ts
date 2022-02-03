@@ -47,10 +47,12 @@ async function main() {
   app.register(server.createHandler({ path: "/graphql" }));
 
   app.register(fastifyStatic, {
-    root: path.resolve(path.join(__dirname, "../web/build")),
+    root: path.resolve(path.join(__dirname, "../../web/build")),
   });
 
-  await app.listen(process.env.PORT || 4000, "0.0.0.0");
+  const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+
+  await app.listen(process.env.PORT || 4000, isDev ? "localhost" : "0.0.0.0");
   console.log(
     `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
   );

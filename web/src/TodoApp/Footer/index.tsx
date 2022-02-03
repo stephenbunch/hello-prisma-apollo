@@ -34,6 +34,7 @@ export function Footer(props: FooterProps) {
         {filters.map((filter) => (
           <li key={filter}>
             <a
+              href="/#"
               className={filter === selectedFilter ? "selected" : undefined}
               onClick={() => onFilterChange(filter)}
             >

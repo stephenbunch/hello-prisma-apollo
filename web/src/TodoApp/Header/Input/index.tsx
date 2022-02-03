@@ -26,7 +26,7 @@ export function Input() {
         }
       }
     },
-    [value]
+    [value, createTodo]
   );
 
   return (

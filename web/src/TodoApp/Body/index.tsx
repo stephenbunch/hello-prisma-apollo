@@ -28,7 +28,7 @@ export function Body(props: BodyProps) {
       await updateTodos({ variables: { input: { completed: true } } });
     }
     await refetchQueries([GetTodosDocument]);
-  }, [todos]);
+  }, [toggleAllChecked, updateTodos]);
 
   return (
     <section className="main">
