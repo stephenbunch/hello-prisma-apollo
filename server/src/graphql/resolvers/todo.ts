@@ -22,18 +22,33 @@ export const todoResolvers: Resolvers = {
 
   Mutation: {
     async createTodo(_, { input }) {
-      const todo = await prisma.todo.create({ data: input });
+      const todo = await prisma.todo.create({
+        data: {
+          description: input.description,
+          completed: input.completed ?? undefined,
+        },
+      });
       return todo;
     },
 
     async updateTodo(_, { input }) {
       const { id, ...data } = input;
-      const todo = await prisma.todo.update({ where: { id }, data });
+      const todo = await prisma.todo.update({
+        where: { id },
+        data: {
+          description: input.description ?? undefined,
+          completed: input.completed ?? undefined,
+        },
+      });
       return todo;
     },
 
     async updateTodos(_, { input }) {
-      const batch = await prisma.todo.updateMany({ data: input });
+      const batch = await prisma.todo.updateMany({
+        data: {
+          completed: input.completed ?? undefined,
+        },
+      });
       return batch.count;
     },
 
@@ -43,10 +58,11 @@ export const todoResolvers: Resolvers = {
 
     async deleteTodos(_, { completed }) {
       const where: Prisma.TodoWhereInput = {};
-      if (completed !== undefined) {
-        where.completed = completed;
-      }
-      await prisma.todo.deleteMany({ where });
+      await prisma.todo.deleteMany({
+        where: {
+          completed: completed ?? undefined,
+        },
+      });
     },
   },
 };
