@@ -1,5 +1,5 @@
 import { GraphQLScalarType } from "graphql";
-import { Resolvers } from "./types";
+import { Resolvers } from "../types";
 
 const Void = new GraphQLScalarType({
   name: "Void",

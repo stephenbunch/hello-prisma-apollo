@@ -1,0 +1,5 @@
+query GetTodos {
+  todos {
+    ...TodoApp_Item_Todo
+  }
+}

@@ -19,6 +19,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTodo: Todo;
   deleteTodo?: Maybe<Scalars['Void']>;
+  deleteTodos?: Maybe<Scalars['Void']>;
   updateTodo: Todo;
 };
 
@@ -30,6 +31,11 @@ export type MutationCreateTodoArgs = {
 
 export type MutationDeleteTodoArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteTodosArgs = {
+  completed?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -50,15 +56,18 @@ export type QueryTodoArgs = {
 
 export type Todo = {
   __typename?: 'Todo';
+  completed: Scalars['Boolean'];
   description: Scalars['String'];
   id: Scalars['String'];
 };
 
 export type TodoCreateInput = {
+  completed?: InputMaybe<Scalars['Boolean']>;
   description: Scalars['String'];
 };
 
 export type TodoUpdateInput = {
+  completed?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
 };
@@ -157,6 +166,7 @@ export type ResolversParentTypes = {
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createTodo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType, RequireFields<MutationCreateTodoArgs, 'input'>>;
   deleteTodo?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
+  deleteTodos?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType, RequireFields<MutationDeleteTodosArgs, never>>;
   updateTodo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'input'>>;
 };
 
@@ -166,6 +176,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type TodoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Todo'] = ResolversParentTypes['Todo']> = {
+  completed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

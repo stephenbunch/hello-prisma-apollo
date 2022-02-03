@@ -1,0 +1,5 @@
+fragment TodoApp_Item_Todo on Todo {
+  id
+  description
+  completed
+}

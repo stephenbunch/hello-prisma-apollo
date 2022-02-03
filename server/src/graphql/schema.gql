@@ -3,15 +3,18 @@ scalar Void
 type Todo {
   id: String!
   description: String!
+  completed: Boolean!
 }
 
 input TodoCreateInput {
   description: String!
+  completed: Boolean
 }
 
 input TodoUpdateInput {
   id: String!
   description: String
+  completed: Boolean
 }
 
 type Query {
@@ -23,6 +26,7 @@ type Mutation {
   createTodo(input: TodoCreateInput!): Todo!
   updateTodo(input: TodoUpdateInput!): Todo!
   deleteTodo(id: String!): Void
+  deleteTodos(completed: Boolean): Void
 }
 
 schema {

@@ -1,0 +1,11 @@
+mutation DeleteTodo($id: String!) {
+  deleteTodo(id: $id)
+}
+
+mutation UpdateTodo($input: TodoUpdateInput!) {
+  updateTodo(input: $input) {
+    id
+    description
+    completed
+  }
+}

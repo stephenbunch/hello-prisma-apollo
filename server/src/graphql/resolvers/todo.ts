@@ -1,5 +1,6 @@
-import { prisma } from "../prisma/client";
-import { Resolvers } from "./types";
+import { Prisma } from "@prisma/client";
+import { prisma } from "../../prisma/client";
+import { Resolvers } from "../types";
 
 export const todoResolvers: Resolvers = {
   Query: {
@@ -12,7 +13,9 @@ export const todoResolvers: Resolvers = {
     },
 
     async todos() {
-      const todos = await prisma.todo.findMany();
+      const todos = await prisma.todo.findMany({
+        orderBy: { id: Prisma.SortOrder.asc },
+      });
       return todos;
     },
   },
@@ -31,6 +34,14 @@ export const todoResolvers: Resolvers = {
 
     async deleteTodo(_, { id }) {
       await prisma.todo.delete({ where: { id } });
+    },
+
+    async deleteTodos(_, { completed }) {
+      const where: Prisma.TodoWhereInput = {};
+      if (completed !== undefined) {
+        where.completed = completed;
+      }
+      await prisma.todo.deleteMany({ where });
     },
   },
 };
