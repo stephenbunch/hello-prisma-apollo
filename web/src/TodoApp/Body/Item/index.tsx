@@ -29,7 +29,7 @@ export function Item(props: TodoItemProps) {
     await refetchQueries([GetTodosDocument]);
     setEditing(false);
     setDescription("");
-  }, [todo, description]);
+  }, [todo, description, updateTodoMutation]);
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -53,12 +53,12 @@ export function Item(props: TodoItemProps) {
       variables: { input: { id: todo.id, completed: !todo.completed } },
     });
     await refetchQueries([GetTodosDocument]);
-  }, [todo]);
+  }, [todo, updateTodoMutation]);
 
   const deleteTodo = useCallback(async () => {
     await deleteTodoMutation({ variables: { id: todo.id } });
     await refetchQueries([GetTodosDocument]);
-  }, [todo]);
+  }, [todo, deleteTodoMutation]);
 
   return (
     <li
