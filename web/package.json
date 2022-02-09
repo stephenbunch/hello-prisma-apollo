@@ -31,7 +31,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"BROWSER=none react-scripts start\" \"npm run codegen -- --watch\"",
+    "dev": "concurrently \"BROWSER=none react-scripts start\" \"npm run codegen -- --watch\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
