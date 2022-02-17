@@ -1,9 +1,7 @@
 import { useCallback } from "react";
-import {
-  GetTodosDocument,
-  useDeleteCompletedTodosMutation,
-} from "../../graphql-codegen";
-import { refetchQueries } from "../../refetchQueries";
+import { useMutation, useQueryClient } from "react-query";
+import { EntityCacheKey } from "../../entity-cache";
+import { useGraphQLClient } from "../../graphql-client";
 import { Filter, filters } from "../Filter";
 
 export interface FooterProps {
@@ -15,12 +13,15 @@ export interface FooterProps {
 export function Footer(props: FooterProps) {
   const { selectedFilter, onFilterChange, activeTodoCount } = props;
 
-  const [deleteCompletedTodos, _] = useDeleteCompletedTodosMutation();
+  const queryClient = useQueryClient();
+  const { DeleteCompletedTodos } = useGraphQLClient();
+  const { mutateAsync: deleteCompletedTodos } =
+    useMutation(DeleteCompletedTodos);
 
   const onClearCompleted = useCallback(async () => {
-    await deleteCompletedTodos();
-    await refetchQueries([GetTodosDocument]);
-  }, [deleteCompletedTodos]);
+    await deleteCompletedTodos({});
+    await queryClient.invalidateQueries(EntityCacheKey.Todos);
+  }, [deleteCompletedTodos, queryClient]);
 
   return (
     <footer className="footer">

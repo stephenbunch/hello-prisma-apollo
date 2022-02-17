@@ -5,4 +5,8 @@ generates:
     plugins:
       - "@graphql-codegen/typescript"
       - "@graphql-codegen/typescript-operations"
-      - "@graphql-codegen/typescript-react-apollo"
+      # - "@graphql-codegen/typescript-react-query"
+      - "@graphql-codegen/typescript-graphql-request"
+    # config:
+    #   fetcher: graphql-request
+    #   exposeQueryKeys: true

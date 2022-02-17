@@ -1,13 +1,14 @@
 import { KeyboardEvent, useCallback, useRef, useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { Key } from "ts-key-enum";
-import {
-  GetTodosDocument,
-  useCreateTodoMutation,
-} from "../../../graphql-codegen";
-import { refetchQueries } from "../../../refetchQueries";
+import { EntityCacheKey } from "../../../entity-cache";
+import { useGraphQLClient } from "../../../graphql-client";
 
 export function Input() {
-  const [createTodo, _] = useCreateTodoMutation();
+  const queryClient = useQueryClient();
+  const { CreateTodo } = useGraphQLClient();
+  const { mutateAsync: createTodo } = useMutation(CreateTodo);
+
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,8 +18,8 @@ export function Input() {
       if (e.key === Key.Enter && value !== "") {
         setLoading(true);
         try {
-          await createTodo({ variables: { input: { description: value } } });
-          await refetchQueries([GetTodosDocument]);
+          await createTodo({ input: { description: value } });
+          await queryClient.invalidateQueries(EntityCacheKey.Todos);
           setValue("");
         } finally {
           setLoading(false);
@@ -26,7 +27,7 @@ export function Input() {
         }
       }
     },
-    [value, createTodo]
+    [value, createTodo, queryClient]
   );
 
   return (

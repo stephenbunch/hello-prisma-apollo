@@ -1,10 +1,8 @@
 import { useCallback, useMemo } from "react";
-import {
-  GetTodosDocument,
-  TodoApp_Item_TodoFragment,
-  useUpdateTodosMutation,
-} from "../../graphql-codegen";
-import { refetchQueries } from "../../refetchQueries";
+import { useMutation, useQueryClient } from "react-query";
+import { EntityCacheKey } from "../../entity-cache";
+import { useGraphQLClient } from "../../graphql-client";
+import { TodoApp_Item_TodoFragment } from "../../graphql-codegen";
 import { Item } from "./Item";
 
 export interface BodyProps {
@@ -19,16 +17,18 @@ export function Body(props: BodyProps) {
     [todos]
   );
 
-  const [updateTodos, _] = useUpdateTodosMutation();
+  const queryClient = useQueryClient();
+  const { UpdateTodos } = useGraphQLClient();
+  const { mutateAsync: updateTodos } = useMutation(UpdateTodos);
 
   const toggleAll = useCallback(async () => {
     if (toggleAllChecked) {
-      await updateTodos({ variables: { input: { completed: false } } });
+      await updateTodos({ input: { completed: false } });
     } else {
-      await updateTodos({ variables: { input: { completed: true } } });
+      await updateTodos({ input: { completed: true } });
     }
-    await refetchQueries([GetTodosDocument]);
-  }, [toggleAllChecked, updateTodos]);
+    await queryClient.invalidateQueries(EntityCacheKey.Todos);
+  }, [toggleAllChecked, updateTodos, queryClient]);
 
   return (
     <section className="main">
