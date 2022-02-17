@@ -1,5 +1,5 @@
 {
-  "name": "hello-prisma-apollo",
+  "name": "hello-prisma-react-query",
   "workspaces": [
     "server",
     "web"
